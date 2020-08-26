@@ -1,0 +1,49 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "cpp build andd",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/usr/bin/gcc",
+            "args": [
+                "-Wall",
+                "-Wextra",
+                "-Werror",
+                "-m64",
+                "-static",
+                "-l",
+                "mpfr",
+                "-l",
+                "gmp",
+                "-l",
+                "boost_program_options",
+                "-L",
+                "/usr/lib",
+                "-L",
+                "/usr/local/boost/boost_1_55_0/stage/lib",
+                "-lstdc++",
+                "-g",
+                "${file}"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "cpp build active file",
+            "miDebuggerPath": "/usr/bin/gdb"
+        }
+        
+    ]
+}

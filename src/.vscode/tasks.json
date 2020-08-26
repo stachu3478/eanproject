@@ -1,0 +1,41 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558 
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "this task is right",
+            "command": "sudo",
+            "args": [
+                "g++",
+                "-Wall",
+                "-m64",
+                "-static",
+                "-lboost_program_options",
+                "-L",
+                "/usr/lib",
+                "-I/usr/local/boost/boost_1_55_0",
+                "-L",
+                "/usr/local/boost/boost_1_55_0/stage/lib",
+                "-L",
+                "/usr/local/lib",
+                "-lmpfr",
+                "-lgmp",
+                "-lgmpxx",
+                "-lstdc++",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "/usr/bin"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        }
+    ]
+}
