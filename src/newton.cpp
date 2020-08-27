@@ -130,7 +130,6 @@ ArrayOfDouble* rec_newton(P* polynomial, long double eps0, long double epsX, int
 	} else
 	{
 		ArrayOfDouble* dSolutions = rec_newton(fd(polynomial), eps0, epsX, loops);
-		sort_frozen(dSolutions->a, dSolutions->size);
 		ArrayOfDouble* newSolutions = new ArrayOfDouble(dSolutions->size + 1);
 		pairs(dSolutions, new RecNewtonRangeSearch(newSolutions, polynomial, eps0, epsX, loops));
 		group_frozen(newSolutions, epsX);
