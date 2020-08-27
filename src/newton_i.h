@@ -15,9 +15,8 @@
 #include "debug_i.h"
 #include "arithmetic_i.h"
 
-ArrayOfI* rec_newton_i(WI* wielomian, I* eps0, I* epsX, int loops);
+ArrayOfI* rec_newton_i(PI* polynomial, I* eps0, I* epsX, int loops);
 
 class AllArgumentsSatisfiedExceptionI {};
-class RangeExceptionI {};
 
 #endif /* SRC_NEWTON_I_H_ */

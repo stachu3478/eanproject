@@ -8,44 +8,44 @@
 #include "function.h"
 using namespace std;
 
-long double infinity_behaviour(long double infinity, W* wielomian)
+long double infinity_behaviour(long double infinity, P* polynomial)
 {
 	int max_st = -Infinity;
 	long double max_st_mul = -1.;
-	for (int i = 0; i < wielomian->size; i++)
+	for (int i = 0; i < polynomial->size; i++)
 	{
-		if (wielomian->st[i] > max_st)
+		if (polynomial->st[i] > max_st)
 		{
-			max_st = wielomian->st[i];
-			max_st_mul = wielomian->mul[i];
+			max_st = polynomial->st[i];
+			max_st_mul = polynomial->mul[i];
 		}
 	}
 	return (sign_equal(max_st_mul, pow(infinity, max_st))) ? Infinity : -Infinity;
 }
 
 // Oblicza f(x)
-long double fx(long double x, W* wielomian)
+long double fx(long double x, P* polynomial)
 {
-    long double* y = new long double[wielomian->size];
+    long double* y = new long double[polynomial->size];
     if (abs_d(x) == Infinity)
-        return p_fx(x, infinity_behaviour(x, wielomian));
-    for (int i = 0; i < wielomian->size; i++)
-    	y[i] = pow(x, wielomian->st[i]) * wielomian->mul[i];
-    long double result = sum(y, wielomian->size);
+        return p_fx(x, infinity_behaviour(x, polynomial));
+    for (int i = 0; i < polynomial->size; i++)
+    	y[i] = pow(x, polynomial->st[i]) * polynomial->mul[i];
+    long double result = sum(y, polynomial->size);
     delete y;
     return p_fx(x, result);
 };
 
 // Oblicza pochodna wielomianu
-W* fd(W* wielomian)
+P* fd(P* polynomial)
 {
-	W* wd = new W(wielomian->size);
+	P* wd = new P(polynomial->size);
 	int new_size = 0;
-	for (int i = 0; i < wielomian->size; i++)
+	for (int i = 0; i < polynomial->size; i++)
 	{
-		if (wielomian->st[i] == 0) continue;
-		wd->st[new_size] = wielomian->st[i] - 1;
-		wd->mul[new_size] = wielomian->mul[i] * wielomian->st[i];
+		if (polynomial->st[i] == 0) continue;
+		wd->st[new_size] = polynomial->st[i] - 1;
+		wd->mul[new_size] = polynomial->mul[i] * polynomial->st[i];
 		new_size++;
 	}
 	wd->size = new_size;
@@ -53,12 +53,12 @@ W* fd(W* wielomian)
 };
 
 // Szuka miejsca zerowego przy pomocy bisekcji
-void bisection_frozen(W* wielomian, Range* range, long double eps)
+void bisection_frozen(P* polynomial, Range* range, long double eps)
 {
-	long double valueAtMin = fx(range->min, wielomian);
-	long double valueAtMax = fx(range->max, wielomian);
+	long double valueAtMin = fx(range->min, polynomial);
+	long double valueAtMax = fx(range->max, polynomial);
 	long double halfWay = (valueAtMin + valueAtMax) / 2;
-	long double halfWayValue = fx(halfWay, wielomian);
+	long double halfWayValue = fx(halfWay, polynomial);
 	// Ecplise urodzil sie w kraju w krorym nie znano operatorow przecinkowych...
 	if (strict_eq_greater_than(eps, abs(valueAtMin)))
 		range->max = range->min;

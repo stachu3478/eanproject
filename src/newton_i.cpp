@@ -9,16 +9,20 @@
 
 using namespace std;
 
-bool newton_step_i(WI* wielomian, WI* poch, I* x, I* eps0)
+class RangeExceptionI {};
+
+bool newton_step_i(PI* polynomial, PI* poch, I* x, I* eps0)
 {
-	I* wx = fx_i(x, wielomian);
+	I* wx = fx_i(x, polynomial);
 	I* wpx = fx_i(x, poch);
 	I wpx_absolute = wpx->Absolute();
 	if (strict_eq_greater_than_i(eps0, &wpx_absolute))
 		return false;
 	I x_ref = *x;
 	x_ref -= *wx / *wpx;
-	wx = fx_i(x, wielomian);
+	x->a = x_ref.a;
+	x->b = x_ref.b;
+	wx = fx_i(x, polynomial);
 	I wx_absolute = wx->Absolute();
 	if (strict_eq_greater_than_i(eps0, &wx_absolute))
 		return false;
@@ -26,14 +30,14 @@ bool newton_step_i(WI* wielomian, WI* poch, I* x, I* eps0)
 	return true;
 };
 
-I* restricted_newton_i(WI* wielomian, I* startX, I* eps0, int loops, RangeI* range)
+I* restricted_newton_i(PI* polynomial, I* startX, I* eps0, int loops, RangeI* range)
 {
 	p_restricted_newton_i(startX);
-	WI* poch = fd_i(wielomian);
+	PI* poch = fd_i(polynomial);
 	I* parg = startX;
 	for (int i = loops; i > 0; i--)
 	{
-		bool shouldContinue = newton_step_i(wielomian, poch, parg, eps0);
+		bool shouldContinue = newton_step_i(polynomial, poch, parg, eps0);
 		if (greater_than_i(range->min, parg) || greater_than_i(parg, range->max))
 			throw new RangeExceptionI();
 		if (!shouldContinue)
@@ -53,34 +57,34 @@ I* non_inf_start_x(RangeI* ab, I* epsX)
 	if (eq_i(ab->min, MIInfinity()))
 	{
 		I return_value = *(ab->max) - epsX->Scale(2);
-		I* return_value_pointer = &return_value;
+		I* return_value_pointer = new I(return_value.a, return_value.b);
 		return p_non_inf_start_x(return_value_pointer);
 	}
 	else if (eq_i(ab->max, IInfinity()))
 	{
 		I return_value = *(ab->min) + epsX->Scale(2);
-		I* return_value_pointer = &return_value;
+		I* return_value_pointer = new I(return_value.a, return_value.b);
 		return p_non_inf_start_x(return_value_pointer);
 	}
 	return p_non_inf_start_x(start_x(ab));
 }
 
 // Szuka rozwiazania na podstawie zasady roznic znakow, powtarza tak dlugo az nie znajdzie rozwiazania
-I* bisect_newton_frozen(WI* wielomian, I* startX, I* eps0, I* epsX, int loops, RangeI* range)
+I* bisect_newton_frozen(PI* polynomial, I* startX, I* eps0, I* epsX, int loops, RangeI* range)
 {
 	p_bisect_newton_i(startX);
 	I* newStartX = startX;
 	for (int i = 0; i < loops; i++)
 		try
 		{
-			return restricted_newton_i(wielomian, newStartX, eps0, loops, range);
+			return restricted_newton_i(polynomial, newStartX, eps0, loops, range);
 		} catch (RangeExceptionI* e)
 		{
 			if (eq_i(range->min, MIInfinity()))
 				throw new RangeExceptionI();
 			if (eq_i(range->max, IInfinity()))
 				throw new RangeExceptionI();
-			bisection_frozen_i(wielomian, range, eps0);
+			bisection_frozen_i(polynomial, range, eps0);
 			if (strict_in_range_i(range->min, range->max, epsX))
 				return new I(range->min->a, range->max->b);
 			newStartX = start_x(range);
@@ -88,16 +92,16 @@ I* bisect_newton_frozen(WI* wielomian, I* startX, I* eps0, I* epsX, int loops, R
 	throw new RangeExceptionI();
 }
 
-bool is_0_in_range(RangeI* range, WI* wielomian)
+bool is_0_in_range(RangeI* range, PI* polynomial)
 {
-	return p_is_0_in_range(sign_equal_i(fx_i(range->min, wielomian), fx_i(range->max, wielomian)));
+	return p_is_0_in_range(sign_equal_i(fx_i(range->min, polynomial), fx_i(range->max, polynomial)));
 }
 
 // Nie dzialajaca lamba wymusila stworzenie klasy
 class RecNewtonRangeSearchI: public PairsI
 {
 public:
-	RecNewtonRangeSearchI(ArrayOfI* a, WI* b, I* c, I* d, int e) { newSolutions = a; wielomian = b; eps0 = c; epsX = d; loops = e;
+	RecNewtonRangeSearchI(ArrayOfI* a, PI* b, I* c, I* d, int e) { newSolutions = a; polynomial = b; eps0 = c; epsX = d; loops = e;
 		offset = 0;
 	};
 	void call(I* a, I* b, int i)
@@ -106,28 +110,28 @@ public:
 		RangeI* range = new RangeI(a, b);
 		p_range_test_i(a, b, next_index);
 		I* startX = non_inf_start_x(range, epsX);
-		if (is_0_in_range(range, wielomian))
+		if (is_0_in_range(range, polynomial))
 		{
 			offset++;
 			newSolutions->size--;
 			return;
 		}
-		newSolutions->a[next_index] = bisect_newton_frozen(wielomian, startX, eps0, epsX, loops, range);
+		newSolutions->a[next_index] = bisect_newton_frozen(polynomial, startX, eps0, epsX, loops, range);
 	};
 private:
 	ArrayOfI* newSolutions;
-	WI* wielomian;
+	PI* polynomial;
 	I* eps0;
 	I* epsX;
 	int loops;
 	int offset;
 };
 
-ArrayOfI* rec_newton_i(WI* wielomian, I* eps0, I* epsX, int loops)
+ArrayOfI* rec_newton_i(PI* polynomial, I* eps0, I* epsX, int loops)
 {
-	if (is_line_i(wielomian))
+	if (is_line_i(polynomial))
 	{
-		I** line = line_ab_i(wielomian);
+		I** line = line_ab_i(polynomial);
 		if (is_horizontal_i(line))
 		{
 			if (is_0_i(line))
@@ -140,10 +144,10 @@ ArrayOfI* rec_newton_i(WI* wielomian, I* eps0, I* epsX, int loops)
 		return solution;
 	} else
 	{
-		ArrayOfI* dSolutions = rec_newton_i(fd_i(wielomian), eps0, epsX, loops);
-		sort_frozen_i(dSolutions->a, dSolutions->size);
+		ArrayOfI* dSolutions = rec_newton_i(fd_i(polynomial), eps0, epsX, loops);
+		//sort_frozen_i(dSolutions->a, dSolutions->size);
 		ArrayOfI* newSolutions = new ArrayOfI(dSolutions->size + 1);
-		pairs_i(dSolutions, new RecNewtonRangeSearchI(newSolutions, wielomian, eps0, epsX, loops));
+		pairs_i(dSolutions, new RecNewtonRangeSearchI(newSolutions, polynomial, eps0, epsX, loops));
 		group_frozen_i(newSolutions, epsX);
 		delete dSolutions;
 		return newSolutions;

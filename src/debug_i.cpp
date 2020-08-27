@@ -23,9 +23,9 @@ I* p_i(const char* t, I* v)
 	return v;
 }
 
-I** p_is_i(const char* t, I** v, int l)
+I** p_is_i(const char* t, I** v, int l, bool debug = debug_mode)
 {
-	if (!debug_mode) return v;
+	if (!debug) return v;
 	cout << t << " [";
 	for (int i = 0; i < l; i++)
 		cout << v[i]->a << " <-> " << v[i]->b << ", ";
@@ -42,7 +42,7 @@ I* p_line_zero_i(I* v) { return p_i("Line zero: ", v); };
 
 I* p_fx_i(I* x, I* y)
 {
-	cout << "f(" << x->a << " <-> " << x->b << ") = " << y->a << " <-> " << y->b << endl;
+	if (debug_mode) cout << "f(" << x->a << " <-> " << x->b << ") = " << y->a << " <-> " << y->b << endl;
 	return y;
 }
 
@@ -53,8 +53,8 @@ void p_bisect_newton_i(I* sx) { p_i("Bisect newton I x =", sx); };
 void p_restricted_newton_i(I* sx) { p_i("Restricted newton I x =", sx); };
 void p_range_test_i(I* a, I* b, int i)
 {
-	cout << "Test in range big (" << a->a << ", " << b->b << ") " << i << endl;
-	cout << "Test in range low (" << a->b << ", " << b->a << ") " << i << endl;
+	if (debug_mode) cout << "Test in range big (" << a->a << ", " << b->b << ") " << i << endl;
+	if (debug_mode) cout << "Test in range low (" << a->b << ", " << b->a << ") " << i << endl;
 }
 
 void p_sort_i(I** arr, int l) { if (sort_v) p_is_i("Sort ", arr, l); };

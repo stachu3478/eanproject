@@ -54,9 +54,9 @@ public:
 	virtual ~Interval();
 	Interval<T> operator=(const Interval<T>& i);
 	Interval<T> operator+(const Interval<T>& i);
-	Interval<T> operator+=(const Interval<T>& i) { return *this + i; };
+	Interval<T> operator+=(const Interval<T>& i) { auto res = *this + i; a = res.a; b = res.b; return res; };
 	Interval<T> operator-(const Interval<T>& i);
-	Interval<T> operator-=(const Interval<T>& i) { return *this - i; };
+	Interval<T> operator-=(const Interval<T>& i) { auto res = *this - i; a = res.a; b = res.b; return res; };
 	Interval<T> operator*(const Interval<T>& i);
 	Interval<T> operator/(const Interval<T>& i);
 	Interval<T> operator^(int l);
@@ -371,8 +371,8 @@ template<typename T>
 inline Interval<T> Interval<T>::Opposite() {
 	Interval<T> x(this->a, this->b);
 	Interval<T> r;
-	r.a = -x.a;
-	r.b = -x.b;
+	r.a = -x.b;
+	r.b = -x.a;
 	return r;
 }
 

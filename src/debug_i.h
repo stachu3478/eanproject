@@ -11,7 +11,7 @@
 #include <iostream>
 #include "Interval.h"
 
-I** p_is_i(const char* t, I** v, int l);
+I** p_is_i(const char* t, I** v, int l, bool debug);
 
 bool p_is_line_i(bool v);
 I** p_line_ab_i(I** ab);

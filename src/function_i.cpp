@@ -8,16 +8,16 @@
 #include "function_i.h"
 using namespace std;
 
-I* infinity_behaviour(I* infinity, WI* wielomian)
+I* infinity_behaviour(I* infinity, PI* polynomial)
 {
 	int max_lvl = -1;
 	I* max_lvl_mul;
-	for (int i = 0; i < wielomian->size; i++)
+	for (int i = 0; i < polynomial->size; i++)
 	{
-		if (wielomian->st[i] > max_lvl)
+		if (polynomial->st[i] > max_lvl)
 		{
-			max_lvl = wielomian->st[i];
-			max_lvl_mul = wielomian->mul + i;
+			max_lvl = polynomial->st[i];
+			max_lvl_mul = polynomial->mul + i;
 		}
 	}
 	I infinity_given_to_power_of_maximum_polynomial_lvl = *infinity ^ max_lvl;
@@ -25,47 +25,47 @@ I* infinity_behaviour(I* infinity, WI* wielomian)
 }
 
 // Oblicza f(x)
-I* fx_i(I* x, WI* wielomian)
+I* fx_i(I* x, PI* polynomial)
 {
-    I** y = new I*[wielomian->size];
+    I** y = new I*[polynomial->size];
     I x_abs = x->Absolute();
     if (strict_eq_i(&x_abs, IInfinity()))
-        return infinity_behaviour(x, wielomian);
+        return infinity_behaviour(x, polynomial);
     if (eq_i(&x_abs, IInfinity()))
         throw NotEnoughInstantiatedException();
-    for (int i = 0; i < wielomian->size; i++)
+    for (int i = 0; i < polynomial->size; i++)
     {
-    	I result = (*x ^ wielomian->st[i]) * wielomian->mul[i];
+    	I result = (*x ^ polynomial->st[i]) * polynomial->mul[i];
     	y[i] = new I(result.a, result.b);
     }
-    I* result = sum_i(y, wielomian->size);
+    I* result = sum_i(y, polynomial->size);
     delete y;
     return p_fx_i(x, result);
 };
 
 // Oblicza pochodna wielomianu
-WI* fd_i(WI* wielomian)
+PI* fd_i(PI* polynomial)
 {
-	WI* wd = new WI(wielomian->size);
+	PI* pd = new PI(polynomial->size);
 	int new_size = 0;
-	for (int i = 0; i < wielomian->size; i++)
+	for (int i = 0; i < polynomial->size; i++)
 	{
-		if (wielomian->st[i] == 0) continue;
-		wd->st[new_size] = wielomian->st[i] - 1;
-		wd->mul[new_size] = wielomian->mul[i].Scale(wielomian->st[i]);
+		if (polynomial->st[i] == 0) continue;
+		pd->st[new_size] = polynomial->st[i] - 1;
+		pd->mul[new_size] = polynomial->mul[i].Scale(polynomial->st[i]);
 		new_size++;
 	}
-	wd->size = new_size;
-	return wd;
+	pd->size = new_size;
+	return pd;
 };
 
 // Szuka miejsca zerowego przy pomocy bisekcji
-void bisection_frozen_i(WI* wielomian, RangeI* range, I* eps)
+void bisection_frozen_i(PI* polynomial, RangeI* range, I* eps)
 {
-	I* valueAtMin = fx_i(range->min, wielomian);
-	I* valueAtMax = fx_i(range->max, wielomian);
+	I* valueAtMin = fx_i(range->min, polynomial);
+	I* valueAtMax = fx_i(range->max, polynomial);
 	I halfWay = (*valueAtMin + *valueAtMax) / I(2., 2.);
-	I* halfWayValue = fx_i(&halfWay, wielomian);
+	I* halfWayValue = fx_i(&halfWay, polynomial);
 	I abs_min = valueAtMin->Absolute();
 	I abs_max = valueAtMax->Absolute();
 	if (strict_eq_greater_than_i(eps, &abs_min))

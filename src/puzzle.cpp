@@ -11,23 +11,23 @@ using namespace std;
 const long double EXPSILON0 = 0.0001, EPSILONX = 0.0001;
 const int MAX_LOOPS = 100;
 
-W* read_puzzle()
+P* read_puzzle()
 {
 	int size = 0;
 	cout << "Podaj liczbę niezerowych składników wielomianu" << endl;
 	cin >> size;
 	cout << endl;
-	W* wielomian = new W(size);
-	for (int i = 0; i < wielomian->size; i++)
+	P* polynomial = new P(size);
+	for (int i = 0; i < polynomial->size; i++)
 	{
 		cout << "Podaj mnożnik kolejnego składnika" << endl;
-		cin >> wielomian->mul[i];
+		cin >> polynomial->mul[i];
 		cout << endl;
 		cout << "Podaj stopień tego składnika" << endl;
-		cin >> wielomian->st[i];
+		cin >> polynomial->st[i];
 		cout << endl;
 	};
-	return wielomian;
+	return polynomial;
 }
 
 void solve()

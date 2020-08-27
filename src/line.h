@@ -15,8 +15,8 @@
 #include "debug.h"
 #include "arithmetic.h"
 
-bool is_line(W* wielomian);
-long double* line_ab(W* wielomian);
+bool is_line(P* polynomial);
+long double* line_ab(P* polynomial);
 bool is_0(long double* ab);
 bool is_horizontal(long double* ab);
 bool is_vertical(long double* ab);

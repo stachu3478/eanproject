@@ -14,8 +14,8 @@
 #include "debug_i.h"
 #include "arithmetic_i.h"
 
-bool is_line_i(WI* wielomian);
-I** line_ab_i(WI* wielomian);
+bool is_line_i(PI* polynomial);
+I** line_ab_i(PI* polynomial);
 bool is_0_i(I** ab);
 bool is_horizontal_i(I** ab);
 bool is_vertical_i(I** ab);

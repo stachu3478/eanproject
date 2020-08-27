@@ -101,5 +101,5 @@ I* sum_i(I** arr, int length)
 	I s(0., 0.);
 	for (int i = length - 1; i >= 0; i--)
 		s += *arr[i];
-	return &s;
+	return new I(s.a, s.b);
 }

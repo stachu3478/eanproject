@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const bool debug_mode = true;
+const bool debug_mode = false;
 const bool sort_v = false;
 
 bool p_bool(const char* t, bool v)
@@ -42,7 +42,7 @@ long double p_line_zero(long double v) { return p_double("Line zero: ", v); };
 
 long double p_fx(long double x, long double y)
 {
-	cout << "f(" << x << ") = " << y << endl;
+	if (debug_mode) cout << "f(" << x << ") = " << y << endl;
 	return y;
 }
 
@@ -51,7 +51,7 @@ void p_bisect_newton(long double sx) { p_double("Bisect newton x =", sx); };
 void p_restricted_newton(long double sx) { p_double("Restricted newton x =", sx); };
 void p_range_test(long double a, long double b, int i)
 {
-	cout << "Test in range (" << a << ", " << b << ") " << i << endl;
+	if (debug_mode) cout << "Test in range (" << a << ", " << b << ") " << i << endl;
 }
 
 void p_sort(long double* arr, int l) { if (sort_v) p_doubles("Sort ", arr, l); };

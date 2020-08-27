@@ -10,24 +10,23 @@
 using namespace std;
 
 ArrayOfDouble* result;
-W* w;
+P* p;
 void test(int* st, long double* mul, int size, long double* results, int result_count)
 {
-	w = new W(size, st, mul);
-	result = rec_newton(w, 0.0001, 0.0001, 100);
-	cout << "Result: " << endl;
+	p = new P(size, st, mul);
+	result = rec_newton(p, 0.0001, 0.0001, 100);
 	for (int i = 0; i < result->size; i++)
 	{
 		if (abs_d(results[i] - result->a[i]) > 0.0001)
 		{
 			cout << "Invalid result " << results[i] << " " << result->a[i] << endl;
-			throw w;
+			throw p;
 		}
 	}
 	if (result_count != result->size)
 	{
 		cout << "Invalid result length " << result->size << " " << result_count << endl;
-		throw w;
+		throw p;
 	}
 }
 

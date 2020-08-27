@@ -23,7 +23,7 @@ I* MIInfinity();
 void group_frozen_i(ArrayOfI* arr, I* eps);
 void cp_i(I* a, I* b, int n);
 void sort_frozen_i(I** list, int length);
-void sort_frozen_by_i(I** list, int length, I* func(double a));
+void sort_frozen_by_i(I** list, int length, long double func(I* a));
 class PairsI { public: virtual void call(I* a, I* b, int i) = 0; };
 void pairs_i(ArrayOfI* list, PairsI* _);
 I* sum_i(I** arr, int length);

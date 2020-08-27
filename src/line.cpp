@@ -7,21 +7,21 @@
 
 #include "line.h"
 
-bool is_line(W* wielomian)
+bool is_line(P* polynomial)
 {
 	bool result = true;
-	for (int i = 0; i < wielomian->size; i++)
-		if (wielomian->st[i] > 1) result = false;
+	for (int i = 0; i < polynomial->size; i++)
+		if (polynomial->st[i] > 1) result = false;
 	return p_is_line(result);
 }
 
-long double* line_ab(W* wielomian)
+long double* line_ab(P* polynomial)
 {
 	long double* ab = new long double[2];
 	ab[0] = 0;
 	ab[1] = 0;
-	for (int i = 0; i < wielomian->size; i++)
-		if (wielomian->st[i] < 2) ab[1 - wielomian->st[i]] = wielomian->mul[i];
+	for (int i = 0; i < polynomial->size; i++)
+		if (polynomial->st[i] < 2) ab[1 - polynomial->st[i]] = polynomial->mul[i];
 	return p_line_ab(ab);
 }
 
