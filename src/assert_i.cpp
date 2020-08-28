@@ -60,6 +60,9 @@ void asserts_i()
 	int w6st[] = { 2, 1, 0 };
 	const char* w6mul[] = { "1", "-1", "20" };
 	long double results6[] = { };
+	int w7st[] = { 3, 2, 1, 0 };
+	const char* w7mul[] = { "0.25", "0.75", "1.5", "-2" };
+	long double results7[] = { };
 
 	test_i(w1st, w1mul, 3, results1, 2);
 	test_i(w2st, w2mul, 4, results2, 3);
@@ -67,6 +70,7 @@ void asserts_i()
 	test_i(w4st, w4mul, 6, results4, 3);
 	test_i(w5st, w5mul, 3, results5, 2);
 	test_i(w6st, w6mul, 3, results6, 0);
+	test_i(w7st, w7mul, 4, results7, 0);
 };
 
 

@@ -181,6 +181,7 @@ ArrayOfI* rec_newton_i(PI* polynomial, I* eps0, I* epsX, int loops)
 	} else
 	{
 		ArrayOfI* dSolutions = rec_newton_i(fd_i(polynomial), eps0, epsX, loops);
+		if (dSolutions->size == 0) return dSolutions;
 		ArrayOfI* newSolutions = new ArrayOfI(dSolutions->size + 1);
 		pairs_i(dSolutions, new RecNewtonRangeSearchI(newSolutions, polynomial, eps0, epsX, loops));
 		group_frozen_i(newSolutions, epsX);
