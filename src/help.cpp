@@ -21,6 +21,7 @@ void cp(long double* a, long double* b, int n)
 
 void group_frozen(ArrayOfDouble* arr, long double eps)
 {
+	return;
 	int new_size = 0;
 	for (int i = 0; i < arr->size; i++)
 	{
@@ -84,7 +85,11 @@ void sort_frozen(long double* arr, int length)
 void pairs(ArrayOfDouble* list, Pairs* _)
 {
 	p_pairs(list->a, list->size);
-	if (list->size == 0) return;
+	if (list->size == 0)
+	{
+		_->call(-Infinity, Infinity, +0);
+		return;
+	};
 	_->call(-Infinity, list->a[0], +0);
 	int i = 0;
 	while (i < list->size - 1)

@@ -48,7 +48,9 @@ long double start_x(Range* ab)
 
 long double non_inf_start_x(Range* ab, long double epsX)
 {
-	if (eq(ab->min, (long double)-Infinity))
+	if (eq(ab->min, (long double)-Infinity) && eq(ab->max, (long double)Infinity))
+		return 0.;
+	else if (eq(ab->min, (long double)-Infinity))
 		return ab->max - epsX * 2;
 	else if (eq(ab->max, (long double)Infinity))
 		return ab->min + epsX * 2;

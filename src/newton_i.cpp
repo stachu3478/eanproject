@@ -85,17 +85,17 @@ I* start_x(RangeI* ab)
 
 I* non_inf_start_x(RangeI* ab, I* epsX)
 {
-	if (eq_i(ab->min, MIInfinity()))
+	if (eq_i(ab->min, MIInfinity()) && eq_i(ab->max, IInfinity()))
+		return new I(0, 0);
+	else if (eq_i(ab->min, MIInfinity()))
 	{
 		I return_value = *(ab->max) - epsX->Scale(2);
-		I* return_value_pointer = new I(return_value.a, return_value.b);
-		return p_non_inf_start_x(return_value_pointer);
+		return p_non_inf_start_x(new I(return_value.a, return_value.a));
 	}
 	else if (eq_i(ab->max, IInfinity()))
 	{
 		I return_value = *(ab->min) + epsX->Scale(2);
-		I* return_value_pointer = new I(return_value.a, return_value.b);
-		return p_non_inf_start_x(return_value_pointer);
+		return p_non_inf_start_x(new I(return_value.b, return_value.b));
 	}
 	return p_non_inf_start_x(start_x(ab));
 }
@@ -123,9 +123,16 @@ I* bisect_newton_frozen(PI* polynomial, I* startX, I* eps0, I* epsX, int loops, 
 	throw new RangeExceptionI();
 }
 
-bool is_0_in_range(RangeI* range, PI* polynomial)
+bool is_0_in_range(RangeI* range, PI* polynomial, I* fx_f(I* x, PI* p))
 {
-	return p_is_0_in_range(sign_equal_i(fx_i(range->min, polynomial), fx_i(range->max, polynomial)));
+	return p_is_0_in_range(sign_equal_i(fx_f(range->min, polynomial), fx_f(range->max, polynomial)));
+}
+
+I* pick_extrem_touching_zero(bool is_x_left_0, bool is_x_right_0, RangeI* range, I* default_value)
+{
+	if (is_x_left_0) return range->min;
+	else if (is_x_right_0) return range->max;
+	return default_value;
 }
 
 // Nie dzialajaca lamba wymusila stworzenie klasy
@@ -141,18 +148,27 @@ public:
 		RangeI* range = new RangeI(a, b);
 		p_range_test_i(a, b, next_index);
 		I* startX = non_inf_start_x(range, epsX);
-		if (is_0_in_range(range, polynomial))
+		bool is_x_left_0 = eq_i(fx_i(range->min, polynomial), new I(0, 0));
+		bool is_x_right_0 = eq_i(fx_i(range->max, polynomial), new I(0, 0));
+		bool is_y_left_0 = is_0_in_range(range, polynomial, fx_helper_l);
+		bool is_y_right_0 = is_0_in_range(range, polynomial, fx_helper_r);
+		if (is_y_left_0 && is_y_right_0)
 		{
 			offset++;
 			newSolutions->size--;
 			return;
 		}
-		I* r_l = bisect_newton_frozen(polynomial, startX, eps0, epsX, loops, range, fx_helper_l);
-		I* r_r = bisect_newton_frozen(polynomial, startX, eps0, epsX, loops, range, fx_helper_r);
-		I* r = new I(r_l->a, r_l->b);
-		if (r_r->a < r->a) r->a = r_r->a;
-		if (r_r->b > r->b) r->b = r_r->b;
-		newSolutions->a[next_index] = r;
+		I* result_left; I* result_right;
+		if (is_y_left_0)result_left = pick_extrem_touching_zero(is_x_left_0, is_x_right_0, range, range->min);
+		else result_left = bisect_newton_frozen(polynomial, new I(startX->a, startX->b), eps0, epsX, loops, range, fx_helper_l);;
+		if (is_y_right_0)result_right = pick_extrem_touching_zero(is_x_left_0, is_x_right_0, range, range->max);
+		else result_right = bisect_newton_frozen(polynomial, new I(startX->a, startX->b), eps0, epsX, loops, range, fx_helper_r);;
+		I* result = new I();
+		if (result_right->a < result_left->a) result->a = result_right->a;
+		else result->a = result_left->a;
+		if (result_right->b > result_left->b) result->b = result_right->b;
+		else result->b = result_left->b;
+		newSolutions->a[next_index] = result;
 	};
 private:
 	ArrayOfI* newSolutions;
@@ -181,7 +197,6 @@ ArrayOfI* rec_newton_i(PI* polynomial, I* eps0, I* epsX, int loops)
 	} else
 	{
 		ArrayOfI* dSolutions = rec_newton_i(fd_i(polynomial), eps0, epsX, loops);
-		if (dSolutions->size == 0) return dSolutions;
 		ArrayOfI* newSolutions = new ArrayOfI(dSolutions->size + 1);
 		pairs_i(dSolutions, new RecNewtonRangeSearchI(newSolutions, polynomial, eps0, epsX, loops));
 		group_frozen_i(newSolutions, epsX);

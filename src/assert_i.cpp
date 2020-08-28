@@ -27,7 +27,7 @@ void test_i(int* st, const char** mul, int size, long double* results, int resul
 		auto abs_i = (I(results[i], results[i]) - *result_i->a[i]).Absolute();
 		if (abs_i.b > 0.0001)
 		{
-			cout << "Invalid result " << results[i] << " " << result_i->a[i] << endl;
+			cout << "Invalid result " << results[i] << " " << result_i->a[i]->a << " <-> " << result_i->a[i]->b << endl;
 			throw p_i;
 		}
 	}
@@ -62,7 +62,7 @@ void asserts_i()
 	long double results6[] = { };
 	int w7st[] = { 3, 2, 1, 0 };
 	const char* w7mul[] = { "0.25", "0.75", "1.5", "-2" };
-	long double results7[] = { };
+	long double results7[] = { 0.858891 };
 
 	test_i(w1st, w1mul, 3, results1, 2);
 	test_i(w2st, w2mul, 4, results2, 3);
@@ -70,7 +70,7 @@ void asserts_i()
 	test_i(w4st, w4mul, 6, results4, 3);
 	test_i(w5st, w5mul, 3, results5, 2);
 	test_i(w6st, w6mul, 3, results6, 0);
-	test_i(w7st, w7mul, 4, results7, 0);
+	test_i(w7st, w7mul, 4, results7, 1);
 };
 
 
