@@ -14,6 +14,9 @@ int main()
 	asserts();
 	asserts_i();
 
+	cout << setprecision(15);
+	cout << fixed;
+
 	bool do_interval_calculations;
 	cout << "Wcisnij 0, aby liczyc w arytmetyce punktowej lub 1, aby liczyc w arytmetyce przedzialowej" << endl;
 	cin >> do_interval_calculations;

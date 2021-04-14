@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const bool debug_mode = true;
+const bool debug_mode = false;
 const bool sort_v = false;
 
 bool p_bool_i(const char* t, bool v)

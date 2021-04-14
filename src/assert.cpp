@@ -14,7 +14,7 @@ P* p;
 void test(int* st, long double* mul, int size, long double* results, int result_count)
 {
 	p = new P(size, st, mul);
-	result = rec_newton(p, 0.0001, 0.0001, 100);
+	result = rec_newton(p, 0.0000000001, 0.0000000001, 100);
 	for (int i = 0; i < result->size; i++)
 	{
 		if (abs_d(results[i] - result->a[i]) > 0.0001)

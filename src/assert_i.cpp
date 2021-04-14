@@ -13,8 +13,8 @@ ArrayOfI* result_i;
 PI* p_i;
 void test_i(int* st, const char** mul, int size, long double* results, int result_count)
 {
-	I eps0 = I().IntRead("0.0001");
-	I epsX = I().IntRead("0.0001");
+	I eps0 = I().IntRead("0.0000000001");
+	I epsX = I().IntRead("0.0000000001");
 	I* mul_i = new I[size];
 	for (int i = 0; i < size; i++)
 	{
